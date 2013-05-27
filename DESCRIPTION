@@ -1,0 +1,14 @@
+Package: FLMethLen
+Type: Package
+Title: Prototype package for size based methods
+Version: 0.0.0
+Date: 2013-05-25
+Author: Ernesto Jardim, Laurence Kell
+Maintainer: Ernesto Jardim <ernesto@ipimar.pt>
+Description: Methods for length and size based stock assessment methods
+License: GPL-2
+LazyLoad: yes
+Depends:
+    R(>= 2.15.0),
+Collate:
+    'lk-funcs.R'
