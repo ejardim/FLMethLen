@@ -196,12 +196,25 @@ alkMFCL=function(lfile,ffile,i=1,df=TRUE){
   age   =rep(1:15,prod(dim(flt$caa)[-1]))
   year  =rep(laply(strsplit(flt$id,"\\|"),function(x) x[1]),each=prod(dim(flt$caa)[-3]))
   season=rep(laply(strsplit(flt$id,"\\|"),function(x) x[2]),each=prod(dim(flt$caa)[-3]))
-  caa   =data.frame(age=age,year=year,season=season,len=len,data=c(flt$caa),iter=1)
+  
+  caa=transform(melt(flt$caa),len   =len[X2],
+                              age   =seq(dim(flt$caa)[1])[X1],
+                              year  =laply(strsplit(flt$id,"\\|"),function(x) x[1]),
+                              season=laply(strsplit(flt$id,"\\|"),function(x) x[2]),
+                              freq  =value)[,-(1:3)]
+                              
+  ggplot(caa)+geom_histogram(aes(len,weight=freq),binwidth=2)+facet_wrap(~year)
+  
+  caa   =data.frame(age   =age,
+                    year  =year,
+                    season=season,
+                    len   =rep(len, prod(dim(flt$caa)[c(1,3)])),
+                    data=c(flt$caa),iter=1)
   if (!df) {
     require(FLCore)
     names(caa)[4]="params"
     caa=as(caa,"FLPar")
-  }
+    }
   
   
   ## length-at-age
@@ -233,10 +246,10 @@ alkMFCL=function(lfile,ffile,i=1,df=TRUE){
   options(warn=wrn)
   
   if (df){
-    caa=caa[caa$data>0 & !is.na(caa$data),c("year","season","len","iter","data")]
-    laa=laa[laa$data>0 & !is.na(laa$data),c("year","season",      "iter","data")]
-    obs=obs[obs$data>0 & !is.na(obs$data),c("year","season","len","iter","data")]
-    hat=hat[hat$data>0 & !is.na(hat$data),c("year","season","len","iter","data")]
+    caa=caa[caa$data>0 & !is.na(caa$data),c("year","age","season","len","iter","data")]
+    laa=laa[laa$data>0 & !is.na(laa$data),c("year",      "season",      "iter","data")]
+    obs=obs[obs$data>0 & !is.na(obs$data),c("year",      "season","len","iter","data")]
+    hat=hat[hat$data>0 & !is.na(hat$data),c("year",      "season","len","iter","data")]
     }
   
   return(list(caa=caa,laa=laa,obs=obs,hat=hat))}
