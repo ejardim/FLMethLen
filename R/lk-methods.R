@@ -22,7 +22,6 @@
 #'   apply(resample(catch.n(ple4sex)[,1:4],2:3,100),2:3,sum)
 #'   apply(resample(catch.n(ple4sex)[,1:4],1:2,100),1:2,sum)
 #'   }
-
 setGeneric('resample',   function(x,...) 
   standardGeneric('resample'))
 
@@ -56,5 +55,75 @@ setMethod('resample',  signature(x='FLQuant'),
         
         as.FLQuant(aperm(res,o))})
   
+
+#dim(apply(m(ple4)[,1:4],1:6, function(x) rbeta(4,x,x)))
+
+setMethod('resample',  signature(x='FLPar'), 
+          function(x,dim=2:length(dim(x)),size,replace=T,...) {
+            
+            resampleFn=function(x,size,replace=T,...){
+              
+              sampleFn= function(x, ...) x[sample.int(length(x),...)]
+
+              y  =c(x)
+              nms=seq(length(y))
+              
+              res=sampleFn(nms,size,replace,prob=y,...)
+              res=factor(res,levels=nms)
+              
+              summary(res)}
+            
+            res=apply(x,dim,resampleFn,size=size,replace=replace,...)
+            
+            ## rearranges array to get dims in FLQuant correct
+            d=seq(length(dim(x)))
+            i=c(d[!(d %in% dim)],dim)
+            names(i)=d
+            o=as.numeric(names(i[order(i)]))
+            
+            dmns=dimnames(x)[i]
+            res=apply(x,dim,resampleFn,size=100)
+            
+            res=array(c(res),unlist(lapply(dmns,length)),dimnames=dmns)
+            
+            FLPar(aperm(res,o))})
+
+#' mixnorm
+#' 
+#' @description 
+#' Simulates a normal density function from an \code{FLQuant}
+#'       
+#' @param mn an \code{FLQuant} with means
+#' @param sd an \code{FLQuant} with standard deviation
+#' @return an \code{FLPar} with expected probability for lengths-at-age
+#' @export
+#' @docType methods
+#' @rdname lk-methods
+#' 
+#' @examples
+#' \dontrun{
+#' mn=FLQuant( 1:5,     dimnames=list(age=1:5,year=1991:2000,unit=1:2))
+#' sd=FLQuant((1:5)/10,dimnames=list(age=1:5,year=1991:2000))
+#' md=mixnorm(mn,sd,(1:20)/4)
+#' ggplot(as.data.frame(dat))+geom_line(aes(len,data,group=age))+facet_wrap(year~unit)
+#'  }
+mixnorm=function(mn,sd,bin,left=T){
+  require(plyr)
+  res=FLPar(maply(data.frame(len=bin), function(len) pnorm(len,mn,sd)))
+  
+  rtn=res
+  
+  if (!left){
+    rtn[-1]          =res[-1]-res[-dim(res)[1]]
+    attributes(rtn)[["boundary"]]="right"
+  }else{
+    rtn[-dim(res)[1]]=res[-1]-res[-dim(res)[1]]
+    rtn[ dim(res)[1]]=1-res[ dim(res)[1]]
+    attributes(rtn)[["boundary"]]="left"
+  }
+  
+  if (length(unique(diff(bin)))==1) attributes(rtn)[["bin"]]=unique(diff(bin))
+  
+  return(rtn)}
   
 

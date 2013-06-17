@@ -12,3 +12,7 @@ Depends:
     R(>= 2.15.0),
 Collate:
     'lk-funcs.R'
+    'lk-methods.R'
+    'lk-mfcl.R'
+    'lk-ss.R'
+

@@ -123,12 +123,22 @@ powh=function(len,n){
 moment=function(x,n=rep(1,length(x)),na.rm=T) { 
   if(length(n)==1) n=rep(n,length(x)) 
   
-  mn=sum(x*n)/sum(n,na.rm=na.rm)
-  sd=(sum(n*(x-mn)^2,,na.rm=na.rm)/sum(n,na.rm=na.rm))^.5
+  mn= sum(x*n,            na.rm=na.rm)/sum(n,na.rm=na.rm)
+  sd=(sum(n*(x-mn)^2,     na.rm=na.rm)/sum(n,na.rm=na.rm))^.5
   sk= sum(n*((x-mn)/sd)^3,na.rm=na.rm)/sum(n,na.rm=na.rm)
   ku= sum(n*((x-mn)/sd)^4,na.rm=na.rm)/sum(n,na.rm=na.rm)-3
   
-  return(c(mn=mn,sd=sd,sk=sk,ku=ku))}
+  ## weighted median
+  n=unlist(c(n))
+  x=unlist(c(x))
+  
+  cumn=cumsum(n)/sum(n)
+  max.=max((1:length(n))[cumn<.50])
+  min.=min((1:length(n))[cumn>=.50])
+  
+  me=(x[min.]*n[min.]+x[max.]*n[max.])/(n[min.]+n[max.])
+  
+  return(c(mn=mn,sd=sd,sk=sk,ku=ku,me=me))}
 
 #' unbin
 #' 
