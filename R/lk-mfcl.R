@@ -179,15 +179,13 @@ mfclLfd=function(ffile){
 #' \code{obs} observed length samples by season and year and \code{hat} fitted lengths by season and year,
 #'  
 #' @export
-#' @example
-#' \dontrun{
-#' library(plyr)
-#' lfile="/home/laurie/Desktop/gcode/mse4mfcl/ALB/papers/SCRS/SCRS2013-ALK/Inputs/length09.fit"
-#' rfile="/home/laurie/Desktop/gcode/mse4mfcl/ALB/papers/CSRS/SCRS2013-ALK/Inputs/plot-09.par.rep"
-#' ffile="/home/laurie/Desktop/Dropbox/collaboration/Shelton/ALBN/4B/2009/albN.frq"
-#' alkMFCL(lfile,ffile)
-#' }
 alkMFCL=function(lfile,ffile,i=1,df=TRUE){
+
+  require(plyr)
+  #' lfile="/home/laurie/Desktop/gcode/mse4mfcl/ALB/papers/SCRS/SCRS2013-ALK/Inputs/length09.fit"
+  #' rfile="/home/laurie/Desktop/gcode/mse4mfcl/ALB/papers/CSRS/SCRS2013-ALK/Inputs/plot-09.par.rep"
+  #' ffile="/home/laurie/Desktop/Dropbox/collaboration/Shelton/ALBN/4B/2009/albN.frq"
+  
   wrn=options()$warn
   options(warn=-1)
   

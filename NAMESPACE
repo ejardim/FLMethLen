@@ -1,2 +1,6 @@
+export(alkMFCL)
+exportMethods(resample)
+export(mixnorm)
 export(moment)
 export(powh)
+export(unbin)

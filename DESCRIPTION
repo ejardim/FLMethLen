@@ -10,9 +10,8 @@ License: GPL-2
 LazyLoad: yes
 Depends:
     R(>= 2.15.0),
+    FLCore
 Collate:
     'lk-funcs.R'
     'lk-methods.R'
     'lk-mfcl.R'
-    'lk-ss.R'
-

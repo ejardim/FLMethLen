@@ -2,45 +2,66 @@
 \name{powh}
 \alias{iav}
 \alias{powh}
+\alias{unbin}
 \title{powh}
 \usage{
-  powh(ln, n)
+  powh(len, n)
+
+  unbin(x)
 }
 \arguments{
-  \item{x;}{a vector holding a time series}
+  \item{len}{vector with length distribution}
+
+  \item{n}{vector with numbers in each length bin}
+
+  \item{x;}{a vector of with intervals as names}
 }
 \value{
-  a \code{vector} with the inter-annual variation each time
-  step
+  a \code{data.frame} \code{mn} (mean), \code{diff}
+  (difference), \code{len} (length) and \code{n}
+  (frequency)
+
+  a \code{data.frame} with left and right boundaries and
+  mid points.
 }
 \description{
+  Estimates growth and mortality parameters from length
+  frequency data.
+
+  For a vector with labels corresponding to intervals i.e.
+  \code{"(0,10]"} returns a data.frame with left and right
+  boundaries and mid point.
+}
+\details{
   Beverton and Holt (1956) developed a method to estimate
   population parameters such as total mortality (Z) from
-  length data e.g.
+  length data i.e.
 
   \deqn{Z=K\frac{L_{\infty}-\overline{L}}{\overline{L}-L^\prime}}
 
-  Based on this equation Powell (1979) developed a method,
-  extended by Wetherall et al. (1987), to estimate growth
-  and mortality parameters. This assumes that the right
-  hand tail of a length frequency distribution was
-  determined by the asymptotic length L and the ratio
-  between Z and the growth rate K. The Beverton and Holt
-  methods assumes good estimates for K and $L_{\infty}$,
-  while the Powell-Wetherall method only requires an
-  estimate of K, since $L_{\infty}$ is estimated by the
-  method as well as Z/K.These method therefore provide
-  estimates for each distribution of Z/K, if K is unknown
-  and Z if K is known.
+  Powell (1979) then developed a method, extended by
+  Wetherall et al. (1987), to estimate growth and mortality
+  parameters. This assumes that the right hand tail of a
+  length frequency distribution is determined by the
+  asymptotic length L and the ratio between Z and the
+  growth rate K.
+
+  The Beverton and Holt methods assumes good estimates for
+  K and $L_{\infty}$, while the Powell-Wetherall method
+  only requires an estimate of K, since $L_{\infty}$ is
+  estimated by the method as well as Z/K. These method
+  therefore provide estimates for Z/K, if K is unknown and
+  Z if K is known.
 
   As well as assuming that growth follows the von
   Bertalanffy growth function, it is also assumed that the
   population is in a steady state with constant exponential
   mortality, no changes in selection pattern of the fishery
-  and constant recruitment. In the Powell-Wetherall method
-  $L^\prime$ can take any value between the smallest and
-  largest sizes. Equation 1 then provides a series of
-  estimates of Z and since
+  and constant recruitment.
+
+  In the Powell-Wetherall method $L^\prime$ can take any
+  value between the smallest and largest sizes. Equation 1
+  then provides a series of estimates of Z and since
 
   \deqn{ \overline{L}-L{\prime}=a+bL{\prime} }
 
@@ -49,15 +70,17 @@
   \deqn{b={-K}/{Z+K}} \deqn{a=-bL_{\infty}}
 
   Therefore plotting $\overline{L}-L^\prime$ against
-  $L^\prime$ therefore provides an estimate of $L_{\infty}$
-  and Z/K
+  $L^\prime$ provides an estimate of $L_{\infty}$ and Z/K
+  from
 
   \deqn{L_{\infty}=-a/b} \deqn{Z/K={-1-b}/{b}}
 
-  If K is known then it also provides an estimate of Z
+  If K is known Z can also be esimated
 }
 \examples{
 x=1
+x=summary(cut(runif(100),seq(0,1,.1)))
+unbin(x)
 }
 \references{
   R. Beverton and S. Holt. Review of method for estimating
